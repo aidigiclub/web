@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>AIDigiClub - THPT Quảng Trị</title>
+
+  <meta name="description" content="AIDigiClub - Câu lạc bộ AI & Năng lực số THPT Quảng Trị">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(45,110,255,.18), transparent 35%),
+        radial-gradient(circle at 0% 50%, rgba(0,220,255,.07), transparent 30%),
+        #080d21;
+      color: #fff;
+      font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    #grid-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: auto;
+    }
+
+    .background-glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .background-glow::before {
+      content: "";
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      left: -250px;
+      top: 15%;
+      background: rgba(0,170,255,.07);
+      filter: blur(120px);
+      border-radius: 50%;
+    }
+
+    .background-glow::after {
+      content: "";
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      right: -200px;
+      top: 45%;
+      background: rgba(100,70,255,.08);
+      filter: blur(120px);
+      border-radius: 50%;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(940px, calc(100% - 30px));
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px 12px 20px;
+      border: 1px solid rgba(130,180,255,.14);
+      background: rgba(7,13,35,.66);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 18px;
+      box-shadow:
+        0 10px 50px rgba(0,0,0,.25),
+        inset 0 1px rgba(255,255,255,.04);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .5px;
+    }
+
+    .nav-brand img {
+      width: 35px;
+      height: 35px;
+      object-fit: contain;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .nav-links a {
+      padding: 9px 12px;
+      color: #aeb9d8;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 10px;
+      transition: .25s;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      background: rgba(80,150,255,.1);
+    }
+
+    .nav-button {
+      padding: 10px 15px;
+      border-radius: 11px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #061022;
+      background: linear-gradient(135deg, #6ff6ff, #4d9cff);
+      box-shadow: 0 0 25px rgba(45,180,255,.2);
+    }
+
+    .mobile-menu {
+      display: none;
+      border: 0;
+      background: none;
+      color: #fff;
+      font-size: 20px;
+    }
+
+    .container {
+      position: relative;
+      z-index: 3;
+      width: min(900px, calc(100% - 32px));
+      margin: auto;
+      padding-top: 95px;
+      padding-bottom: 70px;
+    }
+
+    .hero {
+      position: relative;
+      text-align: center;
+      margin-bottom: 65px;
+    }
+
+    .hero-cover {
+      width: 100%;
+      display: block;
+      margin: auto;
+      border-radius: 28px;
+      mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+      filter: drop-shadow(0 25px 60px rgba(0,0,0,.35));
+    }
+
+    .hero-logo {
+      position: relative;
+      width: min(330px, 58%);
+      margin: -125px auto 0;
+      display: block;
+      animation: floatLogo 6s ease-in-out infinite;
+      filter: drop-shadow(0 0 25px rgba(0,220,255,.15));
+    }
+
+    @keyframes floatLogo {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        transform: translateY(-8px) scale(1.025);
+      }
+    }
+
+    .hero-title {
+      margin-top: 15px;
+      font-size: clamp(25px, 5vw, 44px);
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      background: linear-gradient(120deg, #fff, #83ecff 45%, #7198ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      max-width: 580px;
+      margin: 15px auto 0;
+      color: #98a8ca;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .section {
+      margin-top: 85px;
+      scroll-margin-top: 110px;
+    }
+
+    .section-heading {
+      margin-bottom: 25px;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      color: #64eff;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .section-label::before {
+      content: "";
+      width: 24px;
+      height: 1px;
+      background: #4fe5ff;
+      box-shadow: 0 0 8px #4fe5ff;
+    }
+
+    .section-title {
+      font-size: clamp(24px, 4vw, 34px);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .section-description {
+      margin-top: 8px;
+      color: #8191b3;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .glass {
+      background: linear-gradient(145deg, rgba(24,39,76,.65), rgba(9,16,40,.65));
+      border: 1px solid rgba(125,177,255,.13);
+      border-radius: 22px;
+      box-shadow:
+        0 20px 60px rgba(0,0,0,.18),
+        inset 0 1px rgba(255,255,255,.035);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .intro-card {
+      padding: 30px;
+    }
+
+    .intro-card p {
+      color: #aab8d5;
+      font-size: 15px;
+      line-height: 2;
+    }
+
+    .intro-card strong {
+      color: #fff;
+    }
+
+    .intro-highlight {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 25px;
+    }
+
+    .stat {
+      padding: 18px 14px;
+      border-radius: 16px;
+      background: rgba(65,120,210,.06);
+      border: 1px solid rgba(100,180,255,.09);
+      text-align: center;
+    }
+
+    .stat i {
+      color: #55eaff;
+      font-size: 18px;
+      margin-bottom: 9px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 20px;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 4px;
+      color: #7182a7;
+      font-size: 13px;
+    }
+
+    .project-feature {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .project-image {
+      position: relative;
+      min-height: 330px;
+      overflow: hidden;
+      border-radius: 17px;
+    }
+
+    .project-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .7s ease;
+    }
+
+    .project-feature:hover .project-image img {
+      transform: scale(1.05);
+    }
+
+    .project-image::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(5,10,28,.7), transparent 55%);
+    }
+
+    .project-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .project-tag {
+      display: inline-flex;
+      width: max-content;
+      padding: 6px 10px;
+      border-radius: 8px;
+      color: #64eaff;
+      background: rgba(72,220,255,.07);
+      border: 1px solid rgba(72,220,255,.13);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .project-content h3 {
+      margin-top: 16px;
+      font-size: 25px;
+    }
+
+    .project-content p {
+      margin-top: 12px;
+      color: #8d9dbc;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: max-content;
+      margin-top: 22px;
+      padding: 11px 17px;
+      border-radius: 11px;
+      border: 0;
+      cursor: pointer;
+      color: #061022;
+      background: linear-gradient(135deg, #65efff, #548dff);
+      font-size: 10px;
+      font-weight: 800;
+      box-shadow: 0 8px 25px rgba(52,170,255,.16);
+      transition: .25s;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(52,170,255,.28);
+    }
+
+    .slider {
+      position: relative;
+      overflow: hidden;
+      border-radius: 22px;
+    }
+
+    .slides {
+      display: flex;
+      transition: transform .7s cubic-bezier(.22,.61,.36,1);
+    }
+
+    .slide {
+      min-width: 100%;
+      padding: 14px;
+    }
+
+    .slide-card {
+      overflow: hidden;
+      border-radius: 17px;
+      background: #0d1733;
+      border: 1px solid rgba(120,170,255,.1);
+      cursor: pointer;
+    }
+
+    .slide-image {
+      position: relative;
+      height: 340px;
+      overflow: hidden;
+    }
+
+    .slide-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: .5s;
+    }
+
+    .slide-card:hover .slide-image img {
+      transform: scale(1.04);
+    }
+
+    .slide-info {
+      padding: 17px;
+    }
+
+    .slide-info h3 {
+      font-size: 18px;
+    }
+
+    .slide-info p {
+      margin-top: 6px;
+      color: #7f90b3;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 37px;
+      height: 37px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.13);
+      background: rgba(6,13,32,.7);
+      color: #fff;
+      cursor: pointer;
+      z-index: 5;
+      backdrop-filter: blur(10px);
+      transition: .2s;
+    }
+
+    .slider-btn:hover {
+      background: rgba(70,130,255,.4);
+    }
+
+    .slider-prev {
+      left: 15px;
+    }
+
+    .slider-next {
+      right: 15px;
+    }
+
+    .slider-dots {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 15px;
+    }
+
+    .slider-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      border: 0;
+      background: #334467;
+      cursor: pointer;
+      transition: .3s;
+    }
+
+    .slider-dot.active {
+      width: 20px;
+      border-radius: 10px;
+      background: #59eaff;
+      box-shadow: 0 0 10px rgba(89,234,255,.5);
+    }
+    
+    .slider .slide-item, 
+    .member-slider .member-card {
+      flex: 0 0 25%;
+      max-width: 25%;
+      box-sizing: border-box;
+      padding: 0 5px;
+    }
+    
+    .member-slider .member-name {
+      font-size: 11px;
+    }
+    .member-slider .member-role {
+      font-size: 8.5px;
+    }
+    
+    @media (max-width: 720px) {
+      .member-slider .slide-item,
+      .member-slider .member-card {
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
+    }
+
+    .activity-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .activity-card {
+      position: relative;
+      overflow: hidden;
+      height: 190px;
+      border-radius: 18px;
+      cursor: pointer;
+      border: 1px solid rgba(120,170,255,.1);
+    }
+
+    .activity-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: .5s;
+    }
+
+    .activity-card:hover img {
+      transform: scale(1.07);
+    }
+
+    .activity-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 17px;
+      background: linear-gradient(transparent 25%, rgba(4,9,25,.92));
+    }
+
+    .activity-overlay h3 {
+      font-size: 15px;
+    }
+
+    .activity-overlay p {
+      margin-top: 5px;
+      color: #9aa8c5;
+      font-size: 12px;
+    }
+
+    .member-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); 
+      gap: 10px;
+    }
+
+    .member-card {
+      padding: 10px;
+      text-align: center;
+      border-radius: 16px;
+      background: rgba(19,31,62,.55);
+      border: 1px solid rgba(120,170,255,.1);
+      transition: .3s;
+    }
+
+    .member-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(80,220,255,.25);
+      box-shadow: 0 15px 35px rgba(0,0,0,.2);
+    }
+
+    .member-photo {
+      width: 100%;
+      aspect-ratio: 1;
+      overflow: hidden;
+      border-radius: 14px;
+    }
+
+    .member-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .member-name {
+      margin-top: 10px;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .member-role {
+      margin-top: 3px;
+      color: #687b9f;
+      font-size: 12px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .product-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 16px;
+      border-radius: 17px;
+      background: rgba(18,30,62,.55);
+      border: 1px solid rgba(120,170,255,.1);
+    }
+
+    .product-icon {
+      flex: none;
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(84,232,255,.15), rgba(83,113,255,.15));
+      color: #65eaff;
+      font-size: 20px;
+    }
+
+    .product-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .product-info h3 {
+      font-size: 15px;
+    }
+
+    .product-info p {
+      margin-top: 4px;
+      color: #7182a5;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .download {
+      flex: none;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      color: #fff;
+      background: rgba(75,130,255,.12);
+      border: 1px solid rgba(100,170,255,.12);
+      transition: .25s;
+    }
+
+    .download:hover {
+      background: #4d9cff;
+      color: #061022;
+    }
+
+    .explore-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .explore-image {
+      min-height: 300px;
+    }
+
+    .explore-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .explore-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 32px;
+    }
+
+    .explore-content h3 {
+      font-size: 22px;
+    }
+
+    .explore-content p {
+      margin-top: 12px;
+      color: #8798b9;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .contact-card {
+      padding: 30px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .contact-info {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      padding: 13px 0;
+      border-bottom: 1px solid rgba(120,170,255,.07);
+    }
+
+    .contact-info:last-child {
+      border-bottom: 0;
+    }
+
+    .contact-icon {
+      width: 34px;
+      height: 34px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(77,180,255,.08);
+      color: #5ceaff;
+    }
+
+    .contact-info h4 {
+      font-size: 15px;
+      color: #6f82a5;
+      margin-bottom: 3px;
+    }
+
+    .contact-info p,
+    .contact-info a {
+      font-size: 13px;
+      color: #d5def1;
+    }
+
+    .socials {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .social {
+      width: 37px;
+      height: 37px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      background: rgba(75,130,255,.08);
+      border: 1px solid rgba(100,170,255,.1);
+      transition: .25s;
+    }
+
+    .social:hover {
+      background: #4e9fff;
+      color: #061022;
+      transform: translateY(-3px);
+    }
+
+    footer {
+      position: relative;
+      z-index: 3;
+      padding: 35px 20px 45px;
+      text-align: center;
+      border-top: 1px solid rgba(120,170,255,.07);
+    }
+
+    .footer-logo {
+      width: 75px;
+      margin-bottom: 12px;
+    }
+
+    footer p {
+      color: #61718f;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .footer-credit {
+      margin-top: 13px;
+      color: #8191ad;
+    }
+
+    .footer-credit span {
+      color: #62eaff;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 720px) {
+      .navbar {
+        top: 10px;
+      }
+      .nav-links,
+      .nav-button {
+        display: none;
+      }
+      .mobile-menu {
+        display: block;
+      }
+      .container {
+        width: min(100% - 22px, 900px);
+        padding-top: 75px;
+      }
+      .hero-logo {
+        width: 50%;
+        margin-top: -30%;
+      }
+      .hero-title {
+        font-size: 27px;
+      }
+      .intro-highlight,
+      .project-feature {
+        grid-template-columns: 1fr;
+      }
+      .project-image {
+        min-height: 230px;
+      }
+      .activity-grid,
+      .member-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .product-grid,
+      .explore-card {
+        grid-template-columns: 1fr;
+      }
+      .explore-image {
+        min-height: 230px;
+      }
+      .contact-card {
+        grid-template-columns: 1fr;
+        padding: 22px;
+      }
+      .slide-image {
+        height: 260px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .hero-cover {
+        border-radius: 20px;
+      }
+      .activity-grid {
+        grid-template-columns: 1fr;
+      }
+      .member-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .member-card {
+        padding: 8px;
+      }
+      .section {
+        margin-top: 65px;
+      }
+      .section-title {
+        font-size: 25px;
+      }
+    }
+
+    .mobile-nav {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      z-index: 100;
+      display: none;
+      padding: 9px;
+      border-radius: 18px;
+      background: rgba(7,13,35,.8);
+      border: 1px solid rgba(130,180,255,.14);
+      backdrop-filter: blur(18px);
+    }
+
+    .mobile-nav a {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: #7081a5;
+      font-size: 8px;
+    }
+
+    .mobile-nav i {
+      font-size: 15px;
+    }
+
+    .mobile-nav a.active {
+      color: #63eaff;
+    }
+
+    @media (max-width: 720px) {
+      .mobile-nav {
+        display: flex;
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #080d21;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #1e3964;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #315d98;
+    }
+    
+    #memberSlider {
+      overflow: hidden !important;
+      width: 100% !important;
+    }
+
+    #memberSlider .slides {
+      display: flex !important;
+      gap: 0 !important;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) !important;
+      width: 100% !important;
+    }
+
+    #memberSlider .slide {
+      min-width: 100% !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      flex: 0 0 100% !important;
+      box-sizing: border-box !important;
+      padding: 0 4px !important;
+      display: block !important;
+    }
+
+    #memberSlider .member-grid {
+      display: grid !important;
+      grid-template-columns: repeat(4, 1fr) !important;
+      gap: 12px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    #memberSlider .member-card {
+      width: 100% !important;
+      max-width: 100% !important;
+      flex: none !important;
+      box-sizing: border-box !important;
+    }
+
+    @media (max-width: 720px) {
+      #memberSlider .member-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  
+  <div class="mobile-nav">
+    <a href="#intro">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Giới thiệu</span>
+    </a>
+    <a href="#projects">
+      <i class="fa-solid fa-rocket"></i>
+      <span>Dự án</span>
+    </a>
+    <a href="#activities">
+      <i class="fa-solid fa-calendar"></i>
+      <span>Hoạt động</span>
+    </a>
+    <a href="#members">
+      <i class="fa-solid fa-users"></i>
+      <span>CLB</span>
+    </a>
+    <a href="#explore">
+      <i class="fa-solid fa-compass"></i>
+      <span>Khám phá</span>
+    </a>
+  </div>
+  
+  
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v18.0"></script>
+
+  <canvas id="grid-canvas"></canvas>
+  <div class="background-glow"></div>
+
+  <nav class="navbar">
+    <a href="#top" class="nav-brand">
+      <img src="https://i.ibb.co/ccjXBZH4/logo2.png" alt="Logo">
+    </a>
+
+    <div class="nav-links">
+      <a href="#intro">Giới thiệu</a>
+      <a href="#projects">Dự án</a>
+      <a href="#activities">Hoạt động</a>
+      <a href="#members">Thành viên</a>
+      <a href="#explore">Khám phá</a>
+    </div>
+
+    <a href="#contact" class="nav-button">LIÊN HỆ</a>
+
+    <button class="mobile-menu">
+      <a href="fb.com/aidigiclub.thptqt"><i class="fa-brands fa-facebook-f" target="_blank"></i></a>
+    </button>
+  </nav>
+
+  <main class="container" id="top">
+
+    <section class="hero reveal">
+      <img class="hero-cover" src="https://i.ibb.co/4ZFHcqsM/thumb.png" alt="AIDigiClub">
+      <img class="hero-logo" src="https://i.ibb.co/vrzfy8j/logo1.png" alt="AIDigiClub Logo">
+
+      <h1 class="hero-title">AIDigiClub - THPT Quảng Trị</h1>
+      <p class="hero-subtitle">
+        Câu lạc bộ AI & Năng lực số — nơi công nghệ, sáng tạo và tinh thần học sinh cùng gặp nhau.
+      </p>
+    </section>
+
+    <section class="section reveal" id="intro">
+      <div class="section-heading">
+        <div class="section-label">VỀ CHÚNG TÔI</div>
+        <h2 class="section-title">AIDigiClub là gì?</h2>
+      </div>
+
+      <div class="intro-card glass">
+        <p>
+          <strong>AIDigiClub</strong> là viết tắt của <strong>Câu lạc bộ AI & Năng lực số</strong> thuộc THPT Quảng Trị. 
+          CLB ra mắt vào ngày <strong>06/10/2025</strong>, dưới danh nghĩa là một mô hình sinh hoạt học thuật trẻ trung, giúp học sinh tiếp cận công nghệ thông minh, rèn luyện kỹ năng số và ứng dụng trí tuệ nhân tạo (AI) một cách <strong>an toàn, hiệu quả và sáng tạo</strong> trong học tập cũng như đời sống.
+        </p>
+
+        <div class="intro-highlight">
+          <div class="stat">
+            <i class="fa-solid fa-robot"></i>
+            <strong>AI</strong>
+            <span>Trí tuệ nhân tạo</span>
+          </div>
+
+          <div class="stat">
+            <i class="fa-solid fa-laptop-code"></i>
+            <strong>Digital</strong>
+            <span>Năng lực số</span>
+          </div>
+
+          <div class="stat">
+            <i class="fa-solid fa-lightbulb"></i>
+            <strong>Create</strong>
+            <span>Sáng tạo</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="projects">
+      <div class="section-heading">
+        <div class="section-label">DỰ ÁN CỦA CHÚNG TÔI</div>
+        <h2 class="section-title">Các dự án nổi bật</h2>
+        <p class="section-description">
+          Những sản phẩm được tạo nên từ sự kết hợp giữa công nghệ, AI và sức sáng tạo của học sinh.
+        </p>
+      </div>
+
+      <div class="project-feature glass">
+        <div class="project-image">
+          <img src="https://i.ibb.co/FLYLGz5F/thumb.png" alt="CÀ PHÊ">
+        </div>
+
+        <div class="project-content">
+          <span class="project-tag">ĐƯỢC ƯA CHUỘNG</span>
+          <h3>[SP #002] Phim ngắn CÀ PHÊ | Coffee Slavery</h3>
+          <p>
+            "Cà Phê" là phim ngắn do AI biên kịch, xoay quanh Thái Khang (Cà) – nam sinh cuối cấp gánh trên vai áp lực điểm số và kỳ vọng thành tích. Trong lúc bế tắc, một quyết định tưởng chừng vô hại đã đẩy cuộc sống của Cà vào chuỗi thay đổi bất thường. Từ cậu học trò vui vẻ, Cà rơi vào trạng thái mất ngủ, bất ổn tâm lý và dần xa cách bạn bè, để lại nhiều nghi vấn về bi kịch mà em đang đối mặt.
+          </p>
+          <p>
+            Dự án đã thu hút hơn <strong style="color:#63eaff">100 lượt tương tác</strong>.
+          </p>
+          <button class="primary-btn" onclick="openLink('CÀ PHÊ', 'Dự án truyền thông nổi bật của AIDigiClub.', 'https://www.facebook.com/reel/1469840671369344')">
+            Xem thêm...
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <div style="margin-top:15px">
+        <div class="slider" id="projectSlider">
+          <div class="slides">
+            <div class="slide">
+              <div class="slide-card" onclick="openModal('https://www.facebook.com/reel/1083164573944291')">
+                <div class="slide-image">
+                  <img src="https://i.postimg.cc/Sx95JGDp/music.jpg">
+                </div>
+                <div class="slide-info">
+                  <h3>[SP #001] Sản phẩm nhạc: Lời Hẹn Cùng Tháng Năm | Nguyễn Khánh Phong 12A5</h3>
+                  <p>Sản phẩm nhạc về chủ đề 20/11, nhạc pop ballad , được hoàn thiện bởi chính bản thân mình và công cụ làm nhạc hỗ trợ chỉnh sửa âm thanh phù hợp. Đề tài này liên quan đến sở thích và đam mê của bản thân đó là sáng tác, sáng tạo,... và có khả năng thực hiện cao. Đây là một sản phẩm mang tính tri ân về công lao giảng dạy thầy cô cũng như là lam toả những giá trị tốt đẹp đến môi trường học đường.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="slide">
+              <div class="slide-card" onclick="openModal('https://facebook.com/aidigiclub.thptqt')">
+                <div class="slide-image">
+                  <img src="https://i.postimg.cc/htmwf0pc/nhan.avif">
+                </div>
+                <div class="slide-info">
+                  <h3>[SP #003] Bài trình chiếu tuyên truyền chiến dịch: Bạo lực học đường | Phan Văn Nhân 10A9</h3>
+                  <p>Sản phẩm bài trình chiếu về thực trạng, biểu hiện, nguyên nhân, hậu quả và giải pháp cho bạo lực học đường. Tại ở Việt Nam trong 1 số trường học có rất nhiều bạn phải chịu cảnh bị bắt nạt gây hậu quả nghiêm trọng. Thông điệp: "Không im lặng - lên tiếng để bảo vệ bạn bè!".</p>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+
+          <button class="slider-btn slider-prev" onclick="moveSlider('projectSlider',-1)">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button class="slider-btn slider-next" onclick="moveSlider('projectSlider',1)">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="slider-dots" id="projectDots"></div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="activities">
+      <div class="section-heading">
+        <div class="section-label">HOẠT ĐỘNG CỦA CHÚNG TÔI</div>
+        <h2 class="section-title">Các buổi sinh hoạt</h2>
+        <p class="section-description">
+          Những khoảnh khắc và kỷ niệm đáng nhớ trong hành trình học tập, giao lưu và khám phá công nghệ.
+        </p>
+      </div>
+
+      <div class="slider" id="activitySlider">
+        <div class="slides">
+          <div class="slide">
+            <div class="slide-card" onclick="openModal('https://www.facebook.com/share/p/1DZa2YqN8s/')">
+              <div class="slide-image">
+                <img src="https://i.ibb.co/1tYSdBMn/2.png">
+              </div>
+              <div class="slide-info">
+                <h3>Ra mắt Câu lạc bộ AI & Năng lực số - AIDigiClub</h3>
+                <p>06/10/2025</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide">
+            <div class="slide-card" onclick="openModal('https://www.facebook.com/share/p/1HX6tiTdsW/')">
+              <div class="slide-image">
+                <img src="https://i.ibb.co/Txbs53fZ/5.png">
+              </div>
+              <div class="slide-info">
+                <h3>Giao lưu Công nghệ số (ft. Dariu Showcase Clubs AI 2025)</h3>
+                <p>15/10/2025</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide">
+            <div class="slide-card" onclick="openModal('https://www.facebook.com/share/p/1Bxb44uma9/')">
+              <div class="slide-image">
+                <img src="https://i.ibb.co/N6rMpYcp/18.png" alt="Showcase">
+              </div>
+              <div class="slide-info">
+                <h3>CHƯƠNG TRÌNH CLB AI & NĂNG LỰC SỐ – TRƯỜNG THPT QUẢNG TRỊ - CHỦ ĐỀ "ƯƠM MẦM Ý TƯỞNG – LÀM CHỦ AI"
+</h3>
+                <p>Số thứ nhất (2026-2027) | 25/12/2025</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="slide">
+            <div class="slide-card" onclick="openModal('https://www.facebook.com/share/p/1EAioLHFvm/')">
+              <div class="slide-image">
+                <img src="https://i.ibb.co/hRSD9xND/11.png">
+              </div>
+              <div class="slide-info">
+                <h3>CHƯƠNG TRÌNH CLB AI & NĂNG LỰC SỐ – TRƯỜNG THPT QUẢNG TRỊ - CHỦ ĐỀ "NĂNG LỰC SỐ QUANH TA"</h3>
+                <p>Số thứ hai (2026-2027) | 06/04/2026</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="slide">
+            <div class="slide-card" onclick="openModal('https://www.facebook.com/share/p/1Saur6CCyf/')">
+              <div class="slide-image">
+                <img src="https://i.ibb.co/n8jFVHVc/13.png">
+              </div>
+              <div class="slide-info">
+                <h3>CHƯƠNG TRÌNH CLB AI & NĂNG LỰC SỐ – TRƯỜNG THPT QUẢNG TRỊ - CHỦ ĐỀ "RUNG CHUÔNG VÀNG"</h3>
+                <p>Số thứ ba (2026-2027) | 18/05/2026</p>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+
+        <button class="slider-btn slider-prev" onclick="moveSlider('activitySlider',-1)">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="slider-btn slider-next" onclick="moveSlider('activitySlider',1)">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <div class="slider-dots" id="activityDots"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div class="section-label">KHÁC</div>
+        <h2 class="section-title">Các highlight nổi bật mà chúng tôi muốn kể cho bạn...</h2>
+      </div>
+
+      <div class="activity-grid" style="grid-template-columns: repeat(2, 1fr);">
+        <div class="activity-card" onclick="openModal('https://www.facebook.com/reel/25818185777787918')">
+          <img src="https://i.ibb.co/20XKv00Q/doikich2.jpg" alt="Giao lưu">
+          <div class="activity-overlay">
+            <h3>VLOGS #1</h3>
+            <p>Clip hậu trường vô cùng dễ thương của đội kịch của CLB AI&NLS!!</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section reveal" id="members">
+      <div class="section-heading">
+        <div class="section-label">THÀNH VIÊN</div>
+        <h2 class="section-title">Các thành viên kỳ cựu</h2>
+        <p class="section-description">
+          Những người đồng hành và xây dựng AIDigiClub trong những ngày đầu tiên.
+        </p>
+      </div>
+
+      <h3 style="font-size:12px; color:#8192b4; margin-bottom:12px;">THẦY CÔ PHỤ TRÁCH</h3>
+
+      <div class="member-grid">
+        <div class="member-card">
+          <div class="member-photo">
+            <img src="https://i.ibb.co/vxVvC8vV/co-hang.jpg">
+          </div>
+          <div class="member-name">Cô Lê Nguyễn Thúy Hằng</div>
+          <div class="member-role">Chủ nhiệm câu lạc bộ</div>
+        </div>
+        
+      </div>
+
+      <h3 style="font-size:12px; color:#8192b4; margin: 30px 0 12px;">TỔ QUẢN LÝ</h3>
+
+      <div class="member-grid">
+        <div class="member-card">
+          <div class="member-photo">
+            <img src="https://i.ibb.co/Z1bX34Lb/avt-sice12.png" alt="Thành viên 01">
+          </div>
+          <div class="member-name">Nguyễn Anh Khoa - A1(25-28)</div>
+          <div class="member-role">Quản lý CLB</div>
+        </div>
+
+        <div class="member-card">
+          <div class="member-photo">
+            <img src="https://i.ibb.co/rK2nC4QZ/nhia8.jpg" alt="Thành viên 02">
+          </div>
+          <div class="member-name">Đoàn Thị Thảo Nhi - A8(25-28)</div>
+          <div class="member-role">Phó quản lý CLB</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:12px; color:#8192b4; margin: 30px 0 12px;">THÀNH VIÊN ƯU TÚ</h3>
+
+      <div class="slider" id="memberSlider">
+        <div class="slides">
+          
+          <!-- SLIDE 1 (4 Thành viên) -->
+          <div class="slide">
+            <div class="member-grid">
+              <div class="member-card">
+                <div class="member-photo">
+                  <img src="https://i.ibb.co/dw7cDTKW/quynha7.jpg">
+                </div>
+                <div class="member-name">Hồ Diễm Quỳnh - A7(25-28)</div>
+                <div class="member-role">Diễn viên - Tổ Truyền thông</div>
+              </div>
+
+              <div class="member-card">
+                <div class="member-photo">
+                  <img src="https://i.ibb.co/5WcMMt7W/data5.jpg">
+                </div>
+                <div class="member-name">Bùi Trương Thành Đạt - A5(25-28)</div>
+                <div class="member-role">Diễn viên - Tổ Truyền thông</div>
+              </div>
+
+              <div class="member-card">
+                <div class="member-photo">
+                  <img src="https://i.ibb.co/7tq5yPH9/hunga1.jpg">
+                </div>
+                <div class="member-name">Diệp Gia Hưng - A1(25-28)</div>
+                <div class="member-role">Tổ Kỹ thuật</div>
+              </div>
+
+              <div class="member-card">
+                <div class="member-photo">
+                  <img src="https://i.ibb.co/GvSHYgJp/trinha1.jpg">
+                </div>
+                <div class="member-name">Nguyễn Ngọc Tú Tinh - A1(25-28)</div>
+                <div class="member-role">Diễn viên - Tổ Truyền thông</div>
+              </div>
+            </div>
+          </div> <!-- Đóng Slide 1 -->
+
+          <!-- SLIDE 2 (4 Thành viên) -->
+          <div class="slide">
+            <div class="member-grid">
+              <div class="member-card">
+                <div class="member-photo">
+                  <img src="https://i.ibb.co/hF87qW2R/quyena8.jpg">
+                </div>
+                <div class="member-name">Văn Thục Quyên - A8(25-28)</div>
+                <div class="member-role">Tổ Truyền thông</div>
+              </div>
+
+              <div class="member-card">
+                <div class="member-photo">
+                  <img src="https://i.ibb.co/F4mFst2F/tronga5.jpg">
+                </div>
+                <div class="member-name">Nguyễn Huỳnh Tất Trọng - A5(24-27)</div>
+                <div class="member-role">Diễn viên - Tổ Truyền thông</div>
+              </div>
+
+              <div class="member-card">
+                <div class="member-photo">
+                  <img src="https://i.ibb.co/W4v2yhMS/nguyena2.jpg">
+                </div>
+                <div class="member-name">Võ Đặng Bảo Nguyên - A2(25-28)</div>
+                <div class="member-role">Tổ Kỹ thuật</div>
+              </div>
+
+              <div class="member-card">
+                <div class="member-photo">
+                  <img src="https://i.ibb.co/27521M93/maia10.jpg">
+                </div>
+                <div class="member-name">Nguyễn Thị Thanh Mai - A2(25-28)</div>
+                <div class="member-role">Tổ Truyền thông</div>
+              </div>
+            </div>
+          </div> <!-- Đóng Slide 2 -->
+
+          <!-- SLIDE 3 (Thêm/Sửa thành viên tùy ý) -->
+          <div class="slide">
+            <div class="member-grid">
+              <div class="member-card">
+                <div class="member-photo">
+                  <img src="https://i.ibb.co/YFzdQfTk/diena3.jpg">
+                </div>
+                <div class="member-name">Võ Đại Điền - A3(25-28)</div>
+                <div class="member-role">Tổ Kỹ thuật</div>
+              </div>
+            </div>
+          </div> <!-- Đóng Slide 3 -->
+
+        </div>
+
+        <button class="slider-btn slider-prev" onclick="moveSlider('memberSlider',-1)">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="slider-btn slider-next" onclick="moveSlider('memberSlider',1)">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <div class="slider-dots" id="memberDots"></div>
+
+    <section class="section reveal" id="products">
+      <div class="section-heading">
+        <div class="section-label">TÍNH ỨNG DỤNG ĐƯỢC</div>
+        <h2 class="section-title">Các sản phẩm nổi bật</h2>
+        <p class="section-description">
+          Những sản phẩm có thể được ứng dụng trực tiếp trong học tập, hoạt động CLB và đời sống số.
+        </p>
+      </div>
+
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-icon">
+            <i class="fa-solid fa-music"></i>
+          </div>
+          <div class="product-info">
+            <h3>Mùa Noel Đầu Tiên</h3>
+            <p>Văn Ngọc Đăng Khoa & Bùi Hồng Quân</p>
+          </div>
+          <a href="https://github.com/user-attachments/files/31349265/Mua.Noel.D.u.Tien.mp3" class="download">
+            <i class="fa-solid fa-download"></i>
+          </a>
+        </div>
+
+        <div class="product-card">
+          <div class="product-icon">
+            <i class="fa-solid fa-gamepad"></i>
+          </div>
+          <div class="product-info">
+            <h3>FILLAP GAME</h3>
+            <p>Phan Đức Mạnh & Đào Văn Tùng Lâm</p>
+          </div>
+          <a href="https://aidigiclub.github.io/sp-aidigiclub/fillap/" target="_blank" class="download">
+            <i class="fa-solid fa-right-to-bracket"></i>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section reveal" id="explore">
+      <div class="section-heading">
+        <div class="section-label">THÊM</div>
+        <h2 class="section-title">Góc khám phá</h2>
+        <p class="section-description">
+          Những bài viết, câu chuyện và kiến thức thú vị xoay quanh AI và thế giới công nghệ.
+        </p>
+      </div>
+
+      <div class="explore-card glass">
+        <div class="explore-image">
+          <img src="https://i.ibb.co/wNvTnv9s/thuyetinternetchet.jpg">
+        </div>
+
+        <div class="explore-content">
+          <!-- <span class="project-tag">ĐÁNG QUAN TÂM</span> -->
+          <h3>Thuyết Internet chết</h3>
+          <p>
+            Giả thuyết Internet chết (Dead Internet Theory) cho rằng phần lớn nội dung, bài đăng, hình ảnh và tương tác trên mạng xã hội hiện nay không phải do con người tạo ra, mà bị thau tóm bởi các bot tự động, thuật toán và trí tuệ nhân tạo (AI) nhằm mục đích thao túng hành vi người dùng.
+          </p>
+          <button class="primary-btn" onclick="openLink('Khám phá', 'AI trong học tập', 'https://www.facebook.com/share/p/1BmYoUGzEP/')">
+            ĐỌC BÀI
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="contact">
+      <div class="section-heading">
+        <div class="section-label">CONTACT</div>
+        <h2 class="section-title">Kết nối với chúng tôi</h2>
+      </div>
+
+      <div class="contact-card glass">
+        <div>
+          <div class="contact-info">
+            <div class="contact-icon">
+              <i class="fa-brands fa-facebook-f"></i>
+            </div>
+            <div>
+              <h4>FANPAGE</h4>
+              <a href="https://facebook.com/aidigiclub.thptqt" target="_blank">@aidigiclub.thptqt</a>
+            </div>
+          </div>
+
+          <div class="contact-info">
+            <div class="contact-icon">
+              <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div>
+              <h4>EMAIL</h4>
+              <a href="mailto:aidigiclub.thptqt@gmail.com">aidigiclub.thptqt@gmail.com</a>
+            </div>
+          </div>
+
+          <div class="contact-info">
+            <div class="contact-icon">
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <div>
+              <h4>ĐỊA CHỈ</h4>
+              <p>146 - Hai Bà Trưng - Phường Quảng Trị - tỉnh Quảng Trị</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  <footer style="padding-bottom:0;">
+      <img class="footer-logo" src="https://i.ibb.co/vrzfy8j/logo1.png">
+      <p>© AIDigiClubTHPTQT</p>
+      <p class="footer-credit">
+        Website được thiết kế và lập trình bởi <span>Sice</span>
+      </p>
+  </footer>
+
+  <script>
+      const canvas = document.getElementById('grid-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let width, height;
+      const gridSpacing = 24;
+      let points = [];
+      let cols = 0, rows = 0;
+
+      const mouse = {
+          x: -1000,
+          y: -1000,
+          radius: 80
+      };
+
+      let shockwaves = [];
+
+      function resize() {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight;
+          initGrid();
+      }
+
+      class Point {
+          constructor(x, y) {
+              this.baseX = x;
+              this.baseY = y;
+              this.x = x;
+              this.y = y;
+              this.vx = 0;
+              this.vy = 0;
+              this.glow = 0;
+          }
+
+          update() {
+              if (mouse.x > 0 && mouse.y > 0) {
+                  const dx = mouse.x - this.x;
+                  const dy = mouse.y - this.y;
+                  const dist = Math.sqrt(dx * dx + dy * dy);
+
+                  if (dist < mouse.radius) {
+                      const force = (1 - dist / mouse.radius) * 3;
+                      const angle = Math.atan2(dy, dx);
+
+                      this.vx -= Math.cos(angle) * force * 0.15;
+                      this.vy -= Math.sin(angle) * force * 0.15;
+
+                      this.glow = Math.max(this.glow, (1 - dist / mouse.radius) * 0.4);
+                  }
+              }
+
+              shockwaves.forEach(sw => {
+                  const sdx = this.x - sw.x;
+                  const sdy = this.y - sw.y;
+                  const sdist = Math.sqrt(sdx * sdx + sdy * sdy);
+
+                  if (Math.abs(sdist - sw.currentRadius) < sw.thickness) {
+                      const waveForce = (1 - sw.currentRadius / sw.maxRadius) * sw.power;
+                      const angle = Math.atan2(sdy, sdx);
+
+                      this.vx += Math.cos(angle) * waveForce;
+                      this.vy += Math.sin(angle) * waveForce;
+                      this.glow = Math.max(this.glow, 0.35);
+                  }
+              });
+
+              const homeDx = this.baseX - this.x;
+              const homeDy = this.baseY - this.y;
+
+              this.vx += homeDx * 0.05;
+              this.vy += homeDy * 0.05;
+
+              this.vx *= 0.82;
+              this.vy *= 0.82;
+
+              this.x += this.vx;
+              this.y += this.vy;
+
+              this.glow *= 0.90;
+          }
+      }
+
+      function initGrid() {
+          points = [];
+          cols = Math.ceil(width / gridSpacing) + 1;
+          rows = Math.ceil(height / gridSpacing) + 1;
+
+          for (let r = 0; r < rows; r++) {
+              for (let c = 0; c < cols; c++) {
+                  points.push(new Point(c * gridSpacing, r * gridSpacing));
+              }
+          }
+      }
+
+      function triggerShockwave(x, y) {
+          shockwaves.push({
+              x: x,
+              y: y,
+              currentRadius: 0,
+              maxRadius: 120,
+              speed: 6,
+              thickness: 20,
+              power: 1.2
+          });
+      }
+
+      function draw() {
+          ctx.clearRect(0, 0, width, height);
+
+          for (let i = shockwaves.length - 1; i >= 0; i--) {
+              let sw = shockwaves[i];
+              sw.currentRadius += sw.speed;
+              if (sw.currentRadius > sw.maxRadius) {
+                  shockwaves.splice(i, 1);
+              }
+          }
+
+          points.forEach(p => p.update());
+
+          for (let r = 0; r < rows; r++) {
+              for (let c = 0; c < cols; c++) {
+                  const idx = r * cols + c;
+                  const p = points[idx];
+
+                  if (c < cols - 1) drawLine(p, points[idx + 1]);
+                  if (r < rows - 1) drawLine(p, points[idx + cols]);
+              }
+          }
+
+          requestAnimationFrame(draw);
+      }
+
+      function drawLine(p1, p2) {
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+
+          const avgGlow = (p1.glow + p2.glow) / 2;
+
+          if (avgGlow > 0.02) {
+              ctx.strokeStyle = `rgba(100, 160, 255, ${0.12 + avgGlow * 0.4})`;
+              ctx.lineWidth = 1 + avgGlow * 0.8;
+              ctx.shadowColor = '#4a90e2';
+              ctx.shadowBlur = avgGlow * 5;
+          } else {
+              ctx.strokeStyle = 'rgba(40, 55, 90, 0.45)';
+              ctx.lineWidth = 1;
+              ctx.shadowBlur = 0;
+          }
+
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+      }
+
+      window.addEventListener('resize', resize);
+
+      window.addEventListener('mousemove', (e) => {
+          mouse.x = e.clientX;
+          mouse.y = e.clientY;
+      });
+
+      document.addEventListener('mouseleave', () => {
+          mouse.x = -1000;
+          mouse.y = -1000;
+      });
+
+      window.addEventListener('pointerdown', (e) => {
+          mouse.x = e.clientX;
+          mouse.y = e.clientY;
+          triggerShockwave(e.clientX, e.clientY);
+      });
+
+      resize();
+      draw();
+
+      const sliderStates = {};
+
+      function initSlider(id) {
+        const slider = document.getElementById(id);
+        if (!slider) return;
+
+        const slides = slider.querySelector(".slides");
+        const count = slides ? slides.children.length : 0;
+
+        sliderStates[id] = { index: 0, count };
+
+        const dots = document.getElementById(id.replace("Slider", "Dots"));
+        if (dots) {
+          dots.innerHTML = "";
+          for (let i = 0; i < count; i++) {
+            const dot = document.createElement("button");
+            dot.className = "slider-dot";
+            if (i === 0) dot.classList.add("active");
+            dot.onclick = () => goToSlide(id, i);
+            dots.appendChild(dot);
+          }
+        }
+      }
+
+      function goToSlide(id, index) {
+        const slider = document.getElementById(id);
+        const state = sliderStates[id];
+        if (!slider || !state || state.count === 0) return;
+
+        state.index = (index + state.count) % state.count;
+        slider.querySelector(".slides").style.transform = `translateX(-${state.index * 100}%)`;
+        updateDots(id);
+      }
+
+      function moveSlider(id, direction) {
+        const state = sliderStates[id];
+        if (!state) return;
+        goToSlide(id, state.index + direction);
+      }
+
+      function updateDots(id) {
+        const dots = document.getElementById(id.replace("Slider", "Dots"));
+        if (!dots) return;
+
+        [...dots.children].forEach((dot, index) => {
+          dot.classList.toggle("active", index === sliderStates[id].index);
+        });
+      }
+      
+      ["projectSlider", "activitySlider", "memberSlider"].forEach(initSlider);
+
+      /* function autoPlay(id, interval = 5000) {
+        setInterval(() => {
+          moveSlider(id, 1);
+        }, interval);
+      }
+
+      autoPlay("projectSlider", 5000);
+      autoPlay("activitySlider", 5000);
+      autoPlay("memberSlider", 5000); */
+
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          ["projectSlider", "activitySlider", "memberSlider"].forEach(initSlider);
+        }, 100);
+      });
+
+      function openLink(title, text, fbUrl) {
+        window.open(fbUrl || 'https://facebook.com/aidigiclub.thptqt', '_blank');
+      }
+
+      function openModal(url) {
+        const fbUrl = (typeof url === 'string' && url.startsWith('http')) ? url : 'https://facebook.com/aidigiclub.thptqt';
+        window.open(fbUrl, '_blank');
+      }
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      }, { threshold: .12 });
+
+      document.querySelectorAll(".reveal").forEach(element => {
+        observer.observe(element);
+      });
+
+      const sections = document.querySelectorAll("section[id]");
+      const mobileLinks = document.querySelectorAll(".mobile-nav a");
+      const mobileNav = document.querySelector(".mobile-nav");
+
+      window.addEventListener("scroll", () => {
+        let current = "";
+        sections.forEach(section => {
+          const top = section.offsetTop - 180;
+          if (window.scrollY >= top) {
+            current = section.id;
+          }
+        });
+
+        mobileLinks.forEach(link => {
+          link.classList.remove("active");
+          if (link.getAttribute("href") === "#" + current) {
+            link.classList.add("active");
+          }
+        });
+
+        if (mobileNav) {
+          const scrollPosition = window.scrollY + window.innerHeight;
+          const pageHeight = document.documentElement.scrollHeight;
+
+          if (pageHeight - scrollPosition <= 100) {
+            mobileNav.style.display = "none";
+          } else {
+            mobileNav.style.display = "";
+          }
+        }
+      });
+
+     /* CHẶN BẬT F12 */
+     document.addEventListener('contextmenu', e => e.preventDefault());
+      document.addEventListener('keydown', function (e) {
+          if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
+          if (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.keyCode === 85)) { e.preventDefault(); return false; }
+          if (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'I' || e.keyCode === 73)) { e.preventDefault(); return false; }
+          if (e.ctrlKey && e.shiftKey && (e.key === 'j' || e.key === 'J' || e.keyCode === 74)) { e.preventDefault(); return false; }
+          if (e.ctrlKey && (e.key === 's' || e.key === 'S' || e.keyCode === 83)) { e.preventDefault(); return false; }
+          if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.keyCode === 67)) { e.preventDefault(); return false; }
+      });
+
+      document.addEventListener('copy', e => e.preventDefault());
+      document.addEventListener('cut', e => e.preventDefault());
+      document.addEventListener('dragstart', event => {
+          if (event.target.tagName.toLowerCase() === 'img') event.preventDefault();
+      });
+    </script>
+</body>
+</html>
